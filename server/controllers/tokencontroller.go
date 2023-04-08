@@ -2,8 +2,7 @@ package controllers
 
 import (
 	"jomonty/go-el3-full-stack-demo-server/auth"
-	"jomonty/go-el3-full-stack-demo-server/database"
-	"jomonty/go-el3-full-stack-demo-server/models"
+	"jomonty/go-el3-full-stack-demo-server/repo"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,33 +14,32 @@ type TokenRequest struct {
 }
 
 func GenerateToken(context *gin.Context) {
+	// Bind to TokenRequest struct, abort on error
 	var request TokenRequest
-	var user models.User
-	// Check that incoming request can be mapped to TokenRequestStruct
 	if err := context.ShouldBindJSON(&request); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		context.Abort()
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// Check that email address exists and password is correct
-	record := database.DB.Where("email = ?", request.Email).First(&user)
-	if record.Error != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
-		context.Abort()
+	// Check that user with supplied email address exists, abort on error
+	if !repo.CheckUserExistsByEmail(request.Email) {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "email address not found"})
+		return
+	}
+	// Fetch user for supplied email address, abort on error
+	user, fetchErr := repo.FindOneUser(request.Email)
+	if fetchErr != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchErr.Error()})
 		return
 	}
 	// Check that the supplied password matches the stored one
-	credentialError := user.CheckPassword(request.Password)
-	if credentialError != nil {
-		context.JSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
-		context.Abort()
+	if err := user.CheckPassword(request.Password); err != nil {
+		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
 		return
 	}
 	// Generate a token
 	tokenString, err := auth.GenerateJWT(user.Email, user.Username)
 	if err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		context.Abort()
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	// Return user details (for display on login) plus a token.

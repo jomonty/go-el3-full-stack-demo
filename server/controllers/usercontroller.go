@@ -1,35 +1,62 @@
 package controllers
 
 import (
-	"jomonty/go-el3-full-stack-demo-server/database"
 	"jomonty/go-el3-full-stack-demo-server/models"
+	"jomonty/go-el3-full-stack-demo-server/repo"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+type Registration struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func RegisterUser(context *gin.Context) {
-	var user models.User
-	if err := context.ShouldBindJSON(&user); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		context.Abort()
+	// Bind to registration struct, abort on error
+	var registration Registration
+	if err := context.ShouldBindJSON(&registration); err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	// Check if username exists
+	if repo.CheckUserExistsByUsername(registration.Username) {
+		context.AbortWithStatusJSON(http.StatusConflict, gin.H{"message": "username already exists"})
+		return
+	}
+	// Initialise user struct
+	user := models.User{
+		Username: registration.Username,
+		Email:    registration.Email,
+		Password: registration.Password,
+	}
+	// Hash password
 	if err := user.HashPassword(user.Password); err != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		context.Abort()
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	record := database.DB.Create(&user)
-	if record.Error != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
-		context.Abort()
+	// Persist user
+	if err := repo.CreateUser(&user); err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	// Return success
 	context.JSON(http.StatusCreated, gin.H{
 		"message":  "user created successfully",
 		"username": user.Username,
 		"email":    user.Email,
 	},
 	)
+}
+
+func GetAllUsers(context *gin.Context) {
+	var users, err = repo.FindAllUsers()
+
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	context.IndentedJSON(http.StatusOK, users)
 }

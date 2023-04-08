@@ -85,11 +85,11 @@ func timeStamp() string {
 	return strings.Replace(ts, ":", "", -1)
 }
 
-func checkCustID(custID int) error {
-	var customer models.Customer
-	record := database.DB.Where("id = ?", custID).First(&customer)
-	if record.Error != nil {
-		return record.Error
-	}
-	return nil
-}
+// func checkCustID(custID int) error {
+// 	var customer models.Customer
+// 	record := database.DB.Where("id = ?", custID).First(&customer)
+// 	if record.Error != nil {
+// 		return record.Error
+// 	}
+// 	return nil
+// }

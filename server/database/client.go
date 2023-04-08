@@ -6,14 +6,16 @@ import (
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var DB *gorm.DB
 var dbError error
 
 func Connect() {
-	// DB, dbError = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
-	DB, dbError = gorm.Open(mysql.Open(DbURL(BuildConfig())), &gorm.Config{})
+	DB, dbError = gorm.Open(mysql.Open(DbURL(BuildConfig())), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 	if dbError != nil {
 		log.Fatal(dbError)
 		panic("Cannot connect to DB")

@@ -1,72 +1,113 @@
 package controllers
 
 import (
-	"jomonty/go-el3-full-stack-demo-server/database"
+	"errors"
 	"jomonty/go-el3-full-stack-demo-server/models"
+	"jomonty/go-el3-full-stack-demo-server/repo"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func GetAllCustomers(context *gin.Context) {
-	// func GetAllCustomers(context *gin.Context) (*[]models.Customer, error) {
-	// // var customer models.Customer
-	// var customers []models.Customer
-	// result := database.DB.Model(&models.Customer{}).Find(&customers)
-	// if result.Error != nil {
-	// 	msg := result.Error
-	// 	return nil, msg
-	// }
-	// return &customers, nil
-	var customers []models.Customer
-	result := database.DB.Model(&models.Customer{}).Find(&customers)
-	if result.Error != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
-		context.Abort()
+func CreateCustomer(context *gin.Context) {
+	// Bind to customer model, abort on error
+	var customer models.Customer
+	if err := context.ShouldBindJSON(&customer); err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	// Persist customer
+	if err := repo.CreateCustomer(&customer); err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	// Return sucess
+	context.IndentedJSON(http.StatusCreated, customer)
+}
+
+func GetAllCustomers(context *gin.Context) {
+	// Fetch customers
+	var customers, fetchError = repo.FindAllCustomers()
+	if fetchError != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchError.Error()})
+	}
+	// Return success
 	context.IndentedJSON(http.StatusOK, customers)
 }
 
 func GetCustomer(context *gin.Context) {
-	var customer models.Customer
+	// Check that param id can be parsed to an int, abort on error
 	id := context.Param("id")
-
-	// Check that param id can be parsed to an int
-	intID, err := strconv.ParseInt(id, 10, 64)
-	if err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	intID, parseErr := strconv.Atoi(id)
+	if parseErr != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": parseErr.Error()})
 		return
 	}
-	// execute query, store response in res and assign returned row to customer
-	res := database.DB.Model(&models.Customer{}).Preload("Files").First(&customer, intID)
-	// check if rows affected = 0, return StatusNotFound
-	if res.RowsAffected == 0 {
-		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "no customer found"})
+	// Fetch customer
+	var customer, fetchError = repo.FindOneCustomer(intID)
+	// Check for errors, handling not found separately to return 404
+	if fetchError != nil {
+		if errors.Is(fetchError, gorm.ErrRecordNotFound) {
+			context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "no customer found"})
+		} else {
+			context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchError.Error()})
+		}
 		return
 	}
-	// check if error found, return StatusInternalServerError
-	if res.Error != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": res.Error.Error()})
-		return
-	}
+	// Return success
 	context.IndentedJSON(http.StatusOK, customer)
 
 }
 
-func CreateCustomer(context *gin.Context) {
-	var customer models.Customer
-	if err := context.ShouldBindJSON(&customer); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		context.Abort()
+func UpdateCustomer(context *gin.Context) {
+	// Check that param id can be parsed to an int, abort on error
+	id := context.Param("id")
+	intID, parseErr := strconv.Atoi(id)
+	if parseErr != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": parseErr.Error()})
 		return
 	}
-	record := database.DB.Create(&customer)
-	if record.Error != nil {
-		context.JSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
-		context.Abort()
+	// Bind to customer model, abort on error
+	var updatedCustomer models.Customer
+	if err := context.ShouldBindJSON(&updatedCustomer); err != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	context.IndentedJSON(http.StatusCreated, customer)
+	// Check that customer id exists, abort if not
+	if !repo.CheckCustomerExistsByID(intID) {
+		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "resource does not exist"})
+		return
+	}
+	// Update customer, abort on error
+	customer, err := repo.UpdateOneCustomer(intID, updatedCustomer)
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	// Return sucess
+	context.IndentedJSON(http.StatusOK, customer)
+}
+
+func DeleteCustomer(context *gin.Context) {
+	// Check that param id can be parsed to an int, abort on error
+	id := context.Param("id")
+	intID, parseErr := strconv.Atoi(id)
+	if parseErr != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": parseErr.Error()})
+		return
+	}
+	// Check that customer id exists
+	if !repo.CheckCustomerExistsByID(intID) {
+		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "resource does not exist"})
+		return
+	}
+	// Delete customer, abort on error
+	if err := repo.DeleteOneCustomer(intID); err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	// Return sucess
+	context.IndentedJSON(http.StatusOK, gin.H{"message": "resource deleted"})
 }
