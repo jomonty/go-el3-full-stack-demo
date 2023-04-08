@@ -27,20 +27,6 @@ func main() {
 	router.Run(runport)
 }
 
-// func initRouter() *gin.Engine {
-// 	router := gin.Default()
-// 	api := router.Group("/api")
-// 	{
-// 		api.POST("/user/register", controllers.RegisterUser)
-// 		api.POST("/token", controllers.GenerateToken)
-// 		secured := api.Group("/secured").Use(middlewares.AuthService())
-// 		{
-// 			secured.GET("/ping", controllers.Ping)
-// 		}
-// 	}
-// 	return router
-// }
-
 func setupEnv() {
 	// Using godotenv, load environment variables, log out failure
 	err := godotenv.Load()
