@@ -18,9 +18,11 @@ func InitRouter() *gin.Engine {
 		api.GET("/customers/:id", controllers.GetCustomer)
 		api.POST("/customers", controllers.CreateCustomer)
 		api.POST("/files", controllers.AddFile)
+
 		secured := api.Group("/secured").Use(middlewares.AuthService())
 		{
 			secured.GET("/ping", controllers.Ping)
+			secured.Static("/uploaded_docs", "./uploaded_docs")
 		}
 	}
 	return router
