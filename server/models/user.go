@@ -5,7 +5,7 @@ import (
 )
 
 type User struct {
-	ProjectModel
+	BaseModel
 	Username string `json:"username" gorm:"not null;unique"`
 	Email    string `json:"email" gorm:"not null"`
 	Password string `json:"password" gorm:"not null"`
