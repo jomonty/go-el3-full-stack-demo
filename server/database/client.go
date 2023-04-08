@@ -21,9 +21,13 @@ func Connect(connectionString string) {
 }
 func Migrate() {
 	Instance.AutoMigrate(&models.User{})
+	Instance.AutoMigrate(&models.Customer{})
+	Instance.AutoMigrate(&models.File{})
 	log.Println("Database migration completed.")
 }
 func DropAll() {
 	Instance.Migrator().DropTable(&models.User{})
+	Instance.Migrator().DropTable(&models.Customer{})
+	Instance.Migrator().DropTable(&models.File{})
 	log.Println("Database tables dropped.")
 }
