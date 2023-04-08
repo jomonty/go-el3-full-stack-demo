@@ -1,6 +1,7 @@
 package main
 
 import (
+	"jomonty/go-el3-full-stack-demo-server/database"
 	"log"
 	"os"
 
@@ -17,6 +18,9 @@ func main() {
 	}
 
 	dbsource := os.Getenv("DB_SOURCE")
-	runport := os.Getenv("RUN_PORT")
+	// runport := os.Getenv("RUN_PORT")
 
+	// Initialise database
+	database.Connect(dbsource)
+	database.Migrate()
 }
