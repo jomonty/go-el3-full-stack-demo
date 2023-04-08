@@ -9,6 +9,7 @@ import (
 
 func InitRouter() *gin.Engine {
 	router := gin.Default()
+	router.SetTrustedProxies(nil)
 	api := router.Group("/api")
 	{
 		api.POST("/user/register", controllers.RegisterUser)
