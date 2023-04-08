@@ -1,16 +1,18 @@
 package models
 
-import "golang.org/x/crypto/bcrypt"
+import (
+	"golang.org/x/crypto/bcrypt"
+)
 
 type User struct {
 	ProjectModel
 	Username string `json:"username" gorm:"not null;unique"`
 	Email    string `json:"email" gorm:"not null"`
-	Password string `json:"-" gorm:"not null"`
+	Password string `json:"password" gorm:"not null"`
 }
 
 func (user *User) HashPassword(password string) error {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
