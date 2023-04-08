@@ -1,9 +1,8 @@
 package main
 
 import (
-	"jomonty/go-el3-full-stack-demo-server/controllers"
 	"jomonty/go-el3-full-stack-demo-server/database"
-	"jomonty/go-el3-full-stack-demo-server/middleware"
+	"jomonty/go-el3-full-stack-demo-server/routers"
 	"log"
 	"os"
 
@@ -12,36 +11,45 @@ import (
 )
 
 func main() {
-	// Use godotenv to manage environment variables
-	// Load environment variables, log out failure
-	// Assign environment varibles to local variables
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	dbsource := os.Getenv("DB_SOURCE")
-	runport := ":" + os.Getenv("RUN_PORT")
+	setupEnv()
 
 	// Initialise database
+	dbsource := os.Getenv("DB_SOURCE")
 	database.Connect(dbsource)
+	if os.Getenv("MODE") == "dev" {
+		database.DropAll()
+	}
 	database.Migrate()
 
 	// Initialise router
-	router := initRouter()
+	runport := ":" + os.Getenv("RUN_PORT")
+	router := routers.InitRouter()
 	router.Run(runport)
 }
 
-func initRouter() *gin.Engine {
-	router := gin.Default()
-	api := router.Group("/api")
-	{
-		api.POST("/user/register", controllers.RegisterUser)
-		api.POST("/token", controllers.GenerateToken)
-		secured := api.Group("/secured").Use(middleware.AuthService())
-		{
-			secured.GET("/ping", controllers.Ping)
-		}
+// func initRouter() *gin.Engine {
+// 	router := gin.Default()
+// 	api := router.Group("/api")
+// 	{
+// 		api.POST("/user/register", controllers.RegisterUser)
+// 		api.POST("/token", controllers.GenerateToken)
+// 		secured := api.Group("/secured").Use(middlewares.AuthService())
+// 		{
+// 			secured.GET("/ping", controllers.Ping)
+// 		}
+// 	}
+// 	return router
+// }
+
+func setupEnv() {
+	// Using godotenv, load environment variables, log out failure
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file.")
+	} else {
+		log.Println(".env file loaded.")
 	}
-	return router
+	if os.Getenv("MODE") == "release" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 }

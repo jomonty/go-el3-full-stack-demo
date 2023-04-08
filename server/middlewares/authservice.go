@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"jomonty/go-el3-full-stack-demo-server/auth"
