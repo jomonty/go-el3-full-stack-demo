@@ -3,19 +3,18 @@ package main
 import (
 	"jomonty/go-el3-full-stack-demo-server/database"
 	"jomonty/go-el3-full-stack-demo-server/routers"
-	"log"
+	"jomonty/go-el3-full-stack-demo-server/utils"
 	"os"
-
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	setupEnv()
+	// Run environment config
+	utils.SetupEnv()
 
 	// Initialise database
-	dbsource := os.Getenv("DB_SOURCE")
-	database.Connect(dbsource)
+	// Drop all tables if env set to dev
+	// Then execute Migrate
+	database.Connect()
 	if os.Getenv("MODE") == "dev" {
 		database.DropAll()
 	}
@@ -25,17 +24,4 @@ func main() {
 	runport := ":" + os.Getenv("RUN_PORT")
 	router := routers.InitRouter()
 	router.Run(runport)
-}
-
-func setupEnv() {
-	// Using godotenv, load environment variables, log out failure
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file.")
-	} else {
-		log.Println(".env file loaded.")
-	}
-	if os.Getenv("MODE") == "release" {
-		gin.SetMode(gin.ReleaseMode)
-	}
 }

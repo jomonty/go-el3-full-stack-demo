@@ -8,11 +8,12 @@ import (
 	"gorm.io/gorm"
 )
 
-var Instance *gorm.DB
+var DB *gorm.DB
 var dbError error
 
-func Connect(connectionString string) {
-	Instance, dbError = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+func Connect() {
+	// DB, dbError = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+	DB, dbError = gorm.Open(mysql.Open(DbURL(BuildConfig())), &gorm.Config{})
 	if dbError != nil {
 		log.Fatal(dbError)
 		panic("Cannot connect to DB")
@@ -20,14 +21,14 @@ func Connect(connectionString string) {
 	log.Println("Connected to database.")
 }
 func Migrate() {
-	Instance.AutoMigrate(&models.User{})
-	Instance.AutoMigrate(&models.Customer{})
-	Instance.AutoMigrate(&models.File{})
+	DB.AutoMigrate(&models.User{})
+	DB.AutoMigrate(&models.Customer{})
+	DB.AutoMigrate(&models.File{})
 	log.Println("Database migration completed.")
 }
 func DropAll() {
-	Instance.Migrator().DropTable(&models.User{})
-	Instance.Migrator().DropTable(&models.Customer{})
-	Instance.Migrator().DropTable(&models.File{})
+	DB.Migrator().DropTable(&models.User{})
+	DB.Migrator().DropTable(&models.Customer{})
+	DB.Migrator().DropTable(&models.File{})
 	log.Println("Database tables dropped.")
 }

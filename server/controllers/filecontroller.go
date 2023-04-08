@@ -52,7 +52,7 @@ func AddFile(context *gin.Context) {
 		FileLocation: fileSaveLocation,
 		CustomerID:   uint(intCustID),
 	}
-	record := database.Instance.Create(&file)
+	record := database.DB.Create(&file)
 	if record.Error != nil {
 		fmt.Println("here")
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": record.Error.Error()})
@@ -87,7 +87,7 @@ func timeStamp() string {
 
 func checkCustID(custID int) error {
 	var customer models.Customer
-	record := database.Instance.Where("id = ?", custID).First(&customer)
+	record := database.DB.Where("id = ?", custID).First(&customer)
 	if record.Error != nil {
 		return record.Error
 	}
