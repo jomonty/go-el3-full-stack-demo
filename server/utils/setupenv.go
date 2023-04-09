@@ -19,5 +19,4 @@ func SetupEnv() {
 	if os.Getenv("MODE") == "release" {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	return
 }

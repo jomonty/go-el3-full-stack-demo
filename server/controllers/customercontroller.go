@@ -86,7 +86,7 @@ func UpdateCustomer(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	// Return sucess
+	// Return success
 	context.IndentedJSON(http.StatusOK, customer)
 }
 
