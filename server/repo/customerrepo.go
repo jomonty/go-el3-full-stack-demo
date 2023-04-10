@@ -5,17 +5,26 @@ import (
 	"jomonty/go-el3-full-stack-demo-server/models"
 )
 
-func CreateCustomer(customer *models.Customer) error {
-	record := database.DB.Create(&customer)
-	if record.Error != nil {
-		return record.Error
+func CreateCustomer(newCustomer *models.Customer) (models.Customer, error) {
+	// Originally this function received a pointer and returned only an error.
+	// However, gorm Create does not preload related entities (files), in this
+	// case the 'File' property is nil, as opposed to [].
+	// Solved by making the function return a new customer.
+	var customer models.Customer
+	// First create customer, returning an error on fail
+	if err := database.DB.Create(&newCustomer).Error; err != nil {
+		return customer, err
 	}
-	return nil
+	// Second fetch the customer, with a preload on Files
+	if err := database.DB.Model(&models.Customer{}).Preload("Files").First(&customer, newCustomer.ID).Error; err != nil {
+		return customer, err
+	}
+	return customer, nil
 }
 
 func FindAllCustomers() ([]models.Customer, error) {
 	var customers []models.Customer
-	if err := database.DB.Find(&customers).Error; err != nil {
+	if err := database.DB.Model(&models.Customer{}).Preload("Files").Find(&customers).Error; err != nil {
 		return nil, err
 	}
 	return customers, nil

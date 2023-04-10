@@ -13,13 +13,14 @@ import (
 
 func CreateCustomer(context *gin.Context) {
 	// Bind to customer model, abort on error
-	var customer models.Customer
-	if err := context.ShouldBindJSON(&customer); err != nil {
+	var newCustomer models.Customer
+	if err := context.ShouldBindJSON(&newCustomer); err != nil {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	// Persist customer
-	if err := repo.CreateCustomer(&customer); err != nil {
+	customer, err := repo.CreateCustomer(&newCustomer)
+	if err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
