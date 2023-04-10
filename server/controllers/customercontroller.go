@@ -36,8 +36,10 @@ func GetAllCustomers(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": paginationErr.Error()})
 		return
 	}
+	// Assign search param for last_name
+	lastNameSearch := context.Request.URL.Query().Get("last_name")
 	// Fetch customers
-	var customers, fetchError = repo.FindAllCustomers(&pagination)
+	var customers, fetchError = repo.FindAllCustomers(&pagination, lastNameSearch)
 	if fetchError != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchError.Error()})
 	}

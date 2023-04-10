@@ -22,11 +22,12 @@ func CreateCustomer(newCustomer *models.Customer) (models.Customer, error) {
 	return customer, nil
 }
 
-func FindAllCustomers(pagination *models.Pagination) ([]models.Customer, error) {
+func FindAllCustomers(pagination *models.Pagination, lastNameSearch string) ([]models.Customer, error) {
 	var customers []models.Customer
+	lastNameLike := "%" + lastNameSearch + "%"
 	offset := (pagination.Page - 1) * pagination.Limit
 	queryBuilder := database.DB.Limit(pagination.Limit).Offset(offset).Order(pagination.Sort)
-	if err := queryBuilder.Model(&models.Customer{}).Preload("Files").Find(&customers).Error; err != nil {
+	if err := queryBuilder.Model(&models.Customer{}).Where("last_name LIKE ?", lastNameLike).Preload("Files").Find(&customers).Error; err != nil {
 		return nil, err
 	}
 	return customers, nil
