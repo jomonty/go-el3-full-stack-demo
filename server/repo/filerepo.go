@@ -13,6 +13,14 @@ func CreateFile(file *models.File) error {
 	return nil
 }
 
+func FindOneFile(fileID int) (models.File, error) {
+	var file models.File
+	if err := database.DB.Model(&models.File{}).First(&file, fileID).Error; err != nil {
+		return file, err
+	}
+	return file, nil
+}
+
 func UpdateOneFile(fileID int, updatedFile models.File) (models.File, error) {
 	var file models.File
 	if err := database.DB.Model(&models.File{}).First(&file, fileID).Error; err != nil {

@@ -12,11 +12,11 @@ func main() {
 	utils.SetupEnv()
 
 	// Initialise database
-	// Drop all tables if env set to dev
-	// Then execute Migrate
 	database.Connect()
+	// Drop all tables and remove stored files if env set to dev
 	if os.Getenv("MODE") == "dev" {
 		database.DropAll()
+		os.RemoveAll("uploaded_docs/")
 	}
 	database.Migrate()
 

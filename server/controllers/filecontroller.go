@@ -5,6 +5,7 @@ import (
 	"jomonty/go-el3-full-stack-demo-server/repo"
 	"jomonty/go-el3-full-stack-demo-server/utils"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -88,8 +89,19 @@ func DeleteFile(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "resource does not exist"})
 		return
 	}
+	// Fetch file to facilitate deletion of actual document
+	file, fetchErr := repo.FindOneFile(intID)
+	if fetchErr != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchErr.Error()})
+		return
+	}
 	// Delete file, abort on error
 	if err := repo.DeleteOneFile(intID); err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	// Delete saved file, abort on error
+	if err := os.Remove(file.FileLocation); err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
