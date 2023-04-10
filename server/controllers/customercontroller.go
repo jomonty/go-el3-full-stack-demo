@@ -4,6 +4,7 @@ import (
 	"errors"
 	"jomonty/go-el3-full-stack-demo-server/models"
 	"jomonty/go-el3-full-stack-demo-server/repo"
+	"jomonty/go-el3-full-stack-demo-server/utils"
 	"net/http"
 	"strconv"
 
@@ -29,8 +30,14 @@ func CreateCustomer(context *gin.Context) {
 }
 
 func GetAllCustomers(context *gin.Context) {
+	// Create pagination, abort on error
+	pagination, paginationErr := utils.ParsePaginationFromRequest(context)
+	if paginationErr != nil {
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": paginationErr.Error()})
+		return
+	}
 	// Fetch customers
-	var customers, fetchError = repo.FindAllCustomers()
+	var customers, fetchError = repo.FindAllCustomers(&pagination)
 	if fetchError != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchError.Error()})
 	}
