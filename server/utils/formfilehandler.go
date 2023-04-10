@@ -10,10 +10,6 @@ import (
 	"time"
 )
 
-func ProcessForm(form *multipart.Form) {
-
-}
-
 func MultiPartFormCheckBadRequest(form *multipart.Form) error {
 	// Check that length of []string at position "customer_id" is > 0, abort on error
 	// This will also produce 0 if there is no field "customer_id" provided
