@@ -4,6 +4,7 @@ import (
 	"jomonty/go-el3-full-stack-demo-server/controllers"
 	"jomonty/go-el3-full-stack-demo-server/middlewares"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,6 +12,7 @@ func InitRouter() *gin.Engine {
 	router := gin.Default()
 	router.SetTrustedProxies(nil)
 	api := router.Group("/api")
+	api.Use(cors.Default())
 	{
 		api.POST("/user/register", controllers.RegisterUser)
 		api.POST("/token", controllers.GenerateToken)
