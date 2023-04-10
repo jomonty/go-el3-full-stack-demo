@@ -14,18 +14,27 @@ func InitRouter() *gin.Engine {
 	{
 		api.POST("/user/register", controllers.RegisterUser)
 		api.POST("/token", controllers.GenerateToken)
-		api.GET("/customers", controllers.GetAllCustomers)       // to be secured
-		api.GET("/customers/:id", controllers.GetCustomer)       // to be secured
-		api.POST("/customers", controllers.CreateCustomer)       // to be secured
-		api.PUT("/customers/:id", controllers.UpdateCustomer)    // to be secured
-		api.DELETE("/customers/:id", controllers.DeleteCustomer) // to be secured
-		api.POST("/files", controllers.AddFile)                  // to be secured
-		api.GET("/users", controllers.GetAllUsers)               // to be secured
 
-		secured := api.Group("/secured").Use(middlewares.AuthService())
+		secured := api.Group("/secured")
+		secured.Use(middlewares.AuthService())
 		{
+			customers := secured.Group("/customers")
+			{
+				customers.GET("", controllers.GetAllCustomers)
+				customers.GET("/:id", controllers.GetCustomer)
+				customers.POST("", controllers.CreateCustomer)
+				customers.PUT("/:id", controllers.UpdateCustomer)
+				customers.DELETE("/:id", controllers.DeleteCustomer)
+			}
+			files := secured.Group("/files")
+			{
+				files.POST("", controllers.AddFile)
+				files.PUT("/:id", controllers.UpdateFile)
+				files.DELETE("/:id", controllers.DeleteFile)
+			}
 			secured.GET("/ping", controllers.Ping)
 			secured.Static("/uploaded_docs", "./uploaded_docs")
+			secured.GET("/users", controllers.GetAllUsers) // to be secured
 		}
 	}
 	return router

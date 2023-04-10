@@ -56,8 +56,7 @@ func UpdateOneCustomer(customerID int, updatedCustomer models.Customer) (models.
 
 func DeleteOneCustomer(customerID int) error {
 	var customer models.Customer
-	err := database.DB.Model(&models.Customer{}).Where("id = ?", customerID).Delete(&customer).Error
-	if err != nil {
+	if err := database.DB.Model(&models.Customer{}).Where("id = ?", customerID).Delete(&customer).Error; err != nil {
 		return err
 	}
 	return nil
