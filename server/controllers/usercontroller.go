@@ -44,9 +44,11 @@ func RegisterUser(context *gin.Context) {
 	}
 	// Return success
 	context.JSON(http.StatusCreated, gin.H{
-		"message":  "user created successfully",
-		"username": user.Username,
-		"email":    user.Email,
+		"message": "user created successfully",
+		"user": gin.H{
+			"username": user.Username,
+			"email":    user.Email,
+		},
 	},
 	)
 }

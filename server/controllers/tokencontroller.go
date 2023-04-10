@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"jomonty/go-el3-full-stack-demo-server/auth"
 	"jomonty/go-el3-full-stack-demo-server/repo"
 	"net/http"
@@ -21,33 +22,40 @@ func GenerateToken(context *gin.Context) {
 		return
 	}
 	// Check that user with supplied email address exists, abort on error
+	fmt.Println("Check user exists controller start")
 	if !repo.CheckUserExistsByEmail(request.Email) {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "email address not found"})
 		return
 	}
 	// Fetch user for supplied email address, abort on error
+	fmt.Println("Fetch user controller start")
 	user, fetchErr := repo.FindOneUser(request.Email)
 	if fetchErr != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchErr.Error()})
 		return
 	}
 	// Check that the supplied password matches the stored one
+	fmt.Println("Check password correct")
 	if err := user.CheckPassword(request.Password); err != nil {
 		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
 		return
 	}
 	// Generate a token
+	fmt.Println("Generate token")
 	tokenString, err := auth.GenerateJWT(user.Email, user.Username)
 	if err != nil {
 		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 	// Return user details (for display on login) plus a token.
+	fmt.Println("Return")
 	context.JSON(http.StatusOK, gin.H{
-		"id":         user.ID,
-		"created_at": user.CreatedAt,
-		"username":   user.Username,
-		"email":      user.Email,
-		"token":      tokenString,
+		"user": gin.H{
+			"id":         user.ID,
+			"created_at": user.CreatedAt,
+			"username":   user.Username,
+			"email":      user.Email,
+		},
+		"token": tokenString,
 	})
 }
