@@ -31,7 +31,7 @@ export const logIn = async (body) => {
 
 export const register = async (body) => {
 	const response = await registerUser(body);
-	return response.status === 201;
+	return response;
 };
 
 export const checkLocalStorage = () => {

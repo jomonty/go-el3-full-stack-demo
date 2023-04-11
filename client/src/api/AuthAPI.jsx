@@ -43,7 +43,7 @@ export const registerUser = async (body) => {
 	// 		}
 	// 	}
 	// }
-	const response = await fetch("api/register", {
+	const response = await fetch("api/user/register", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
