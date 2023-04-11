@@ -1,20 +1,34 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-import { logIn } from "./handlers/authHandler.jsx";
+import LogIn from "./components/LogIn.jsx";
+
+import {
+	initialAuth,
+	logIn,
+	checkLocalStorage,
+} from "./handlers/AuthHandler.jsx";
 
 function App() {
-	const [auth, setAuth] = useState(
-		() => JSON.parse(localStorage.getItem("auth")) || false
-	);
+	const [auth, setAuth] = useState({ ...initialAuth });
 
 	useEffect(() => {
-		localStorage.setItem("auth", JSON.stringify(auth));
-	}, [auth]);
+		const updatedAuth = checkLocalStorage();
+		setAuth(updatedAuth);
+	}, []);
 
-	const handleLogIn = () => {
-		logIn("test_email", "password").then((data) => console.log(data));
+	const handleLogIn = (login) => {
+		logIn(login).then((res) => setAuth(res));
 	};
+
+	const handleLogOut = () => {
+		localStorage.clear();
+		setAuth({ ...initialAuth });
+	};
+
+	// if (auth && !auth.isAuthenticated) {
+	// 	return <LogIn />;
+	// }
 
 	return (
 		<div className="App">
@@ -23,7 +37,19 @@ function App() {
 					<img src="/e3-logo.png" className="logo" alt="" />
 				</a>
 			</div>
-			<button onClick={() => handleLogIn()}>Button</button>
+			<button
+				onClick={() =>
+					handleLogIn({ email: "test_email", password: "password" })
+				}
+			>
+				Log In
+			</button>
+			<button onClick={() => handleLogOut()}>Log Out</button>
+			<p>
+				{auth && auth.isAuthenticated
+					? `Logged In: ${auth.user.username}`
+					: "Not Logged In"}
+			</p>
 		</div>
 	);
 }
