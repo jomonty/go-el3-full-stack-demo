@@ -62,8 +62,7 @@ const SignupForm = ({ setSignupSuccessful }) => {
 	return (
 		<>
 			<p className="text-muted">
-				Please sign up to continue to click <Link to="/login">here</Link> to log
-				in.
+				Please sign up or click <Link to="/login">here</Link> to log in.
 			</p>
 			{alertOpen ? <WarningAlert message={alertValue} /> : ""}
 			<form onSubmit={handleSubmit}>

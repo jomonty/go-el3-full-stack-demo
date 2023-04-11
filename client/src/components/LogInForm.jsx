@@ -46,7 +46,7 @@ const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
 				<button
 					type="button"
 					className="btn-close"
-					onClick={handleAlertClose}
+					onClick={handleWarningAlertClose}
 				></button>
 			</div>
 		);
@@ -74,8 +74,7 @@ const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
 	return (
 		<>
 			<p className="text-muted">
-				Please log in to continue or click <Link to="/signup">here</Link> to
-				signup.
+				Please log in or click <Link to="/signup">here</Link> to signup.
 			</p>
 			{alertOpen ? <WarningAlert message={alertValue} /> : ""}
 			{signupSuccessful ? <SuccessfulSignupAlert /> : ""}

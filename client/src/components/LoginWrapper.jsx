@@ -7,7 +7,10 @@ const LoginWrapper = ({ children }) => {
 						<div>
 							<img src="e3-logo.png" />
 						</div>
-						<div className="w-100 pt-xl-4 pt-2 px-md-5">{children}</div>
+						<div className="w-100 pt-xl-4 pt-2 px-md-5">
+							<h2>Go EL3 Full Stack Demo</h2>
+							{children}
+						</div>
 					</div>
 				</div>
 				<div className="col-md bg-light vh-50 md-vh-100 d-none d-md-block"></div>

@@ -8,7 +8,6 @@ import "./App.css";
 import {
 	initialAuth,
 	logIn,
-	register,
 	checkLocalStorage,
 } from "./handlers/AuthHandler.jsx";
 
