@@ -2,7 +2,12 @@ import { getToken, registerUser } from "../api/AuthAPI.jsx";
 
 export const initialAuth = {
 	isAuthenticated: false,
-	user: null,
+	user: {
+		id: null,
+		created_at: null,
+		username: null,
+		email: null,
+	},
 	token: null,
 	expiry: null,
 };
@@ -24,6 +29,11 @@ export const logIn = async (body) => {
 	return auth;
 };
 
+export const register = async (body) => {
+	const response = await registerUser(body);
+	return response.status === 201;
+};
+
 export const checkLocalStorage = () => {
 	const auth = { ...initialAuth };
 	if (!getLocalStorage("isAuthenticated")) {
@@ -39,8 +49,6 @@ export const checkLocalStorage = () => {
 		auth.user = getLocalStorage("user");
 		auth.token = getLocalStorage("token");
 		auth.expiry = new Date(getLocalStorage("expiry"));
-		console.log("valid");
-		console.log(auth);
 
 		return auth;
 	}
