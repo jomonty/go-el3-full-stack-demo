@@ -26,6 +26,10 @@ func RegisterUser(context *gin.Context) {
 		context.AbortWithStatusJSON(http.StatusConflict, gin.H{"message": "username already exists"})
 		return
 	}
+	// Check if email exists
+	if repo.CheckUserExistsByEmail(registration.Email) {
+		context.AbortWithStatusJSON(http.StatusConflict, gin.H{"message": "email already exists"})
+	}
 	// Initialise user struct
 	user := models.User{
 		Username: registration.Username,
