@@ -38,7 +38,11 @@ export const logIn = async (body) => {
 
 export const register = async (body) => {
 	const response = await registerUser(body);
-	return response;
+	const data = await response.json();
+	return {
+		status: response.status,
+		message: data.message,
+	};
 };
 
 export const checkLocalStorage = () => {

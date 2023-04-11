@@ -14,6 +14,7 @@ import {
 
 function App() {
 	const [auth, setAuth] = useState({ ...initialAuth });
+	const [signupSuccessful, setSignupSuccessful] = useState(false);
 
 	useEffect(() => {
 		const updatedAuth = checkLocalStorage();
@@ -42,9 +43,21 @@ function App() {
 				/>
 				<Route
 					path="/login"
-					element={<LogIn auth={auth} handleLogIn={handleLogIn} />}
+					element={
+						<LogIn
+							auth={auth}
+							handleLogIn={handleLogIn}
+							signupSuccessful={signupSuccessful}
+							setSignupSuccessful={setSignupSuccessful}
+						/>
+					}
 				/>
-				<Route path="/signup" element={<SignUp auth={auth} />} />
+				<Route
+					path="/signup"
+					element={
+						<SignUp auth={auth} setSignupSuccessful={setSignupSuccessful} />
+					}
+				/>
 			</Routes>
 		</Router>
 	);

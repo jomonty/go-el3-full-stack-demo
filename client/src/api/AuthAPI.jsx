@@ -55,7 +55,7 @@ export const registerUser = async (body) => {
 		body: JSON.stringify({
 			username: body.username,
 			email: body.email,
-			body: body.password,
+			password: body.password,
 		}),
 	});
 	return response;

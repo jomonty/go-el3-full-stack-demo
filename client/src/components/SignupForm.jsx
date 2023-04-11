@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
+import { register } from "../handlers/AuthHandler";
+
+const SignupForm = ({ setSignupSuccessful }) => {
 	const navigate = useNavigate();
 	const emptyForm = {
 		email: "",
+		username: "",
 		password: "",
 	};
 	const [form, setForm] = useState({ ...emptyForm });
@@ -20,19 +23,21 @@ const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const res = await handleLogIn(form);
-		if (res.status === 200) {
+		console.log(form);
+		const response = await register(form);
+		if (response.status === 201) {
+			setSignupSuccessful(true);
 			navigate("/");
 		} else {
 			setAlertOpen(true);
-			setAlertValue(res.message);
+			setAlertValue(response.message);
 			const updatedForm = { ...form };
 			updatedForm.password = "";
 			setForm(updatedForm);
 		}
 	};
 
-	const handleWarningAlertClose = () => {
+	const handleAlertClose = () => {
 		setAlertOpen(false);
 	};
 
@@ -40,7 +45,7 @@ const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
 		return (
 			<div className="d-flex justify-content-between alert alert-warning fade show">
 				<div>
-					<strong>Unable to log in. </strong>
+					<strong>Unable to sign up. </strong>
 					{message}
 				</div>
 				<button
@@ -52,68 +57,63 @@ const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
 		);
 	};
 
-	const handleSuccessAlertClose = () => {
-		setSignupSuccessful(false);
-	};
-
-	const SuccessfulSignupAlert = () => {
-		return (
-			<div className="d-flex justify-content-between alert alert-success fade show">
-				<div>
-					<strong>Successfully signed up! </strong>Please log in below.
-				</div>
-				<button
-					type="button"
-					className="btn-close"
-					onClick={handleSuccessAlertClose}
-				></button>
-			</div>
-		);
-	};
+	const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 	return (
 		<>
 			<p className="text-muted">
-				Please log in to continue or click <Link to="/signup">here</Link> to
-				signup.
+				Please sign up to continue to click <Link to="/login">here</Link> to log
+				in.
 			</p>
 			{alertOpen ? <WarningAlert message={alertValue} /> : ""}
-			{signupSuccessful ? <SuccessfulSignupAlert /> : ""}
 			<form onSubmit={handleSubmit}>
+				<div className="form-floating mb-3">
+					<input
+						id="username"
+						name="username"
+						value={form.username}
+						onChange={handleFormFields}
+						type="text"
+						className="form-control"
+						placeholder="username"
+						required
+					/>
+					<label htmlFor="username">Username</label>
+				</div>
 				<div className="form-floating mb-3">
 					<input
 						id="email"
 						name="email"
-						type="text"
 						value={form.email}
 						onChange={handleFormFields}
+						type="text"
 						className="form-control"
 						placeholder="name@example.com"
 						required
 					/>
-					<label htmlFor="email">Email address</label>
+					<label htmlFor="email">Email</label>
 				</div>
 				<div className="form-floating mb-3">
 					<input
 						id="password"
 						name="password"
-						type="password"
 						value={form.password}
 						onChange={handleFormFields}
+						type="password"
 						className="form-control"
 						placeholder="password"
 						required
 					/>
 					<label htmlFor="password">Password</label>
 				</div>
-
 				<div className="d-flex">
 					<button type="submit" className="btn btn-secondary flex-fill">
-						Log In
+						Sign Up
 					</button>
 				</div>
 			</form>
 		</>
 	);
 };
-export default LogInForm;
+
+export default SignupForm;
