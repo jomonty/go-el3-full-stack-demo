@@ -17,7 +17,7 @@ func GenerateToken(context *gin.Context) {
 	// Bind to TokenRequest struct, abort on error
 	var request TokenRequest
 	if err := context.ShouldBindJSON(&request); err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// Check that user with supplied email address exists, abort on error
@@ -28,18 +28,18 @@ func GenerateToken(context *gin.Context) {
 	// Fetch user for supplied email address, abort on error
 	user, fetchErr := repo.FindOneUser(request.Email)
 	if fetchErr != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchErr.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": fetchErr.Error()})
 		return
 	}
 	// Check that the supplied password matches the stored one
 	if err := user.CheckPassword(request.Password); err != nil {
-		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid credentials"})
+		context.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid credentials"})
 		return
 	}
 	// Generate a token
 	tokenString, err := auth.GenerateJWT(user.Email, user.Username)
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Return user details (for display on login) plus a token.

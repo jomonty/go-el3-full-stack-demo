@@ -76,24 +76,24 @@ func UpdateCustomer(context *gin.Context) {
 	id := context.Param("id")
 	intID, parseErr := strconv.Atoi(id)
 	if parseErr != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": parseErr.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": parseErr.Error()})
 		return
 	}
 	// Bind to customer model, abort on error
 	var updatedCustomer models.Customer
 	if err := context.ShouldBindJSON(&updatedCustomer); err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// Check that customer id exists, abort if not
 	if !repo.CheckCustomerExistsByID(intID) {
-		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "resource does not exist"})
+		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "resource does not exist"})
 		return
 	}
 	// Update customer, abort on error
 	customer, err := repo.UpdateOneCustomer(intID, updatedCustomer)
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Return success
@@ -105,17 +105,17 @@ func DeleteCustomer(context *gin.Context) {
 	id := context.Param("id")
 	intID, parseErr := strconv.Atoi(id)
 	if parseErr != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": parseErr.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": parseErr.Error()})
 		return
 	}
 	// Check that customer id exists
 	if !repo.CheckCustomerExistsByID(intID) {
-		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "resource does not exist"})
+		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "resource does not exist"})
 		return
 	}
 	// Delete customer, abort on error
 	if err := repo.DeleteOneCustomer(intID); err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Return sucess

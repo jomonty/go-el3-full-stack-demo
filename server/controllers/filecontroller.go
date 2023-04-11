@@ -15,12 +15,12 @@ func AddFile(context *gin.Context) {
 	// Assign multipart form, abort if error raised
 	form, err := context.MultipartForm()
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// Check form is well constructed
 	if err := utils.MultiPartFormCheckBadRequest(form); err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// Extract and assign form info
@@ -29,7 +29,7 @@ func AddFile(context *gin.Context) {
 	fileSaveLocation := utils.MultiPartFormFileSaveLocation(custID)
 	// Attempt to save file, abort on error
 	if err := context.SaveUploadedFile(uploadedFile, fileSaveLocation); err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Initialise file model
@@ -40,7 +40,7 @@ func AddFile(context *gin.Context) {
 	}
 	// Persist to database
 	if err := repo.CreateFile(&file); err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Return Success
@@ -52,24 +52,24 @@ func UpdateFile(context *gin.Context) {
 	id := context.Param("id")
 	intID, parseErr := strconv.Atoi(id)
 	if parseErr != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": parseErr.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": parseErr.Error()})
 		return
 	}
 	// Bind to file mode, abort on error
 	var updatedFile models.File
 	if err := context.ShouldBindJSON(&updatedFile); err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// Check that file id exists, abort if not
 	if !repo.CheckFileExistsByID(intID) {
-		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "resource does not exist"})
+		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "resource does not exist"})
 		return
 	}
 	// Update file, abort on error
 	file, err := repo.UpdateOneFile(intID, updatedFile)
 	if err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Return success
@@ -81,28 +81,28 @@ func DeleteFile(context *gin.Context) {
 	id := context.Param("id")
 	intID, parseErr := strconv.Atoi(id)
 	if parseErr != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": parseErr.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": parseErr.Error()})
 		return
 	}
 	// Check that file id exists, abort if not
 	if !repo.CheckFileExistsByID(intID) {
-		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"error": "resource does not exist"})
+		context.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "resource does not exist"})
 		return
 	}
 	// Fetch file to facilitate deletion of actual document
 	file, fetchErr := repo.FindOneFile(intID)
 	if fetchErr != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": fetchErr.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": fetchErr.Error()})
 		return
 	}
 	// Delete file, abort on error
 	if err := repo.DeleteOneFile(intID); err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Delete saved file, abort on error
 	if err := os.Remove(file.FileLocation); err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Return success

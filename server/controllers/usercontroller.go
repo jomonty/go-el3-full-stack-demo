@@ -18,7 +18,7 @@ func RegisterUser(context *gin.Context) {
 	// Bind to registration struct, abort on error
 	var registration Registration
 	if err := context.ShouldBindJSON(&registration); err != nil {
-		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 	// Check if username exists
@@ -38,12 +38,12 @@ func RegisterUser(context *gin.Context) {
 	}
 	// Hash password
 	if err := user.HashPassword(user.Password); err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Persist user
 	if err := repo.CreateUser(&user); err != nil {
-		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	// Return success
