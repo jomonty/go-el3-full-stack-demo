@@ -14,11 +14,13 @@ export const initialAuth = {
 
 export const logIn = async (body) => {
 	const response = await getToken(body);
-	if (response.status !== 200) {
-		return;
-	}
 	const data = await response.json();
-
+	if (response.status !== 200) {
+		return {
+			status: response.status,
+			message: data.message,
+		};
+	}
 	const auth = { ...initialAuth };
 	auth.isAuthenticated = true;
 	auth.user = data.user;
@@ -26,7 +28,12 @@ export const logIn = async (body) => {
 	auth.expiry = genExpiryDateTime(1);
 
 	setLocalStorage(auth);
-	return auth;
+
+	return {
+		status: response.status,
+		message: "Login Successful",
+		auth: auth,
+	};
 };
 
 export const register = async (body) => {

@@ -16,13 +16,16 @@ const LogIn = ({ auth, handleLogIn }) => {
 		<div className="container-fluid">
 			<div className="row vh-100">
 				<div className="col-md vh-50 md-vh-100">
-					<div className=" d-flex justify-content-center align-items-center h-100">
-						<div className="flex-fill p-xl-5 m-xl-5 p-lg-4 m-lg-4 p-md-2 m-md-2">
+					<div className=" d-flex flex-column justify-content-center align-content-center align-items-center h-100">
+						<div>
+							<img src="e3-logo.png" />
+						</div>
+						<div className="w-100 pt-xl-4 pt-2 px-md-5">
 							<LogInForm handleLogIn={handleLogIn} />
 						</div>
 					</div>
 				</div>
-				<div className="col-md bg-light vh-50 md-vh-100"></div>
+				<div className="col-md bg-light vh-50 md-vh-100 d-none d-md-block"></div>
 			</div>
 		</div>
 	);

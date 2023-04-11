@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Landing from "./containers/Landing.jsx";
 import Dashboard from "./containers/Dashboard.jsx";
 import LogIn from "./containers/LogIn.jsx";
 import SignUp from "./containers/SignUp.jsx";
@@ -21,8 +20,12 @@ function App() {
 		setAuth(updatedAuth);
 	}, []);
 
-	const handleLogIn = (body) => {
-		logIn(body).then((res) => setAuth(res));
+	const handleLogIn = async (body) => {
+		const response = await logIn(body);
+		if (response.status === 200) {
+			setAuth(response.auth);
+		}
+		return response;
 	};
 
 	const handleLogOut = () => {
@@ -33,16 +36,15 @@ function App() {
 	return (
 		<Router>
 			<Routes>
-				<Route path="/" element={<Landing auth={auth} />} />
 				<Route
-					path="login"
-					element={<LogIn auth={auth} handleLogIn={handleLogIn} />}
-				/>
-				<Route path="signup" element={<SignUp auth={auth} />} />
-				<Route
-					path="/home"
+					path="/"
 					element={<Dashboard auth={auth} handleLogOut={handleLogOut} />}
 				/>
+				<Route
+					path="/login"
+					element={<LogIn auth={auth} handleLogIn={handleLogIn} />}
+				/>
+				<Route path="/signup" element={<SignUp auth={auth} />} />
 			</Routes>
 		</Router>
 	);

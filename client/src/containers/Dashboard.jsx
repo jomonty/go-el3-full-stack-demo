@@ -5,7 +5,7 @@ const Dashboard = ({ auth, handleLogOut }) => {
 	const navigate = useNavigate();
 	useEffect(() => {
 		if (!auth.isAuthenticated) {
-			navigate("/");
+			navigate("/login");
 		}
 	});
 
