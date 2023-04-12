@@ -121,3 +121,14 @@ func DeleteCustomer(context *gin.Context) {
 	// Return sucess
 	context.IndentedJSON(http.StatusOK, gin.H{"message": "resource deleted"})
 }
+
+func GetTotalCustomerCount(context *gin.Context) {
+	// Attempt to retrieve count from DB, abort on error
+	count, err := repo.TotalCustomerCount()
+	if err != nil {
+		context.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+	// Return success
+	context.IndentedJSON(http.StatusOK, gin.H{"customer_count": count})
+}

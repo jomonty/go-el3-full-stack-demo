@@ -70,3 +70,11 @@ func CheckCustomerExistsByID(customerID int) bool {
 	database.DB.Raw("select count(*) > 0 from customers where id = ?", customerID).Scan(&exists)
 	return exists
 }
+
+func TotalCustomerCount() (int64, error) {
+	var count int64
+	if err := database.DB.Model(&models.Customer{}).Count(&count).Error; err != nil {
+		return count, err
+	}
+	return count, nil
+}

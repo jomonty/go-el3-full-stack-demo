@@ -27,6 +27,7 @@ func InitRouter() *gin.Engine {
 				customers.POST("", controllers.CreateCustomer)
 				customers.PUT("/:id", controllers.UpdateCustomer)
 				customers.DELETE("/:id", controllers.DeleteCustomer)
+				customers.GET("/count", controllers.GetTotalCustomerCount)
 			}
 			files := secured.Group("/files")
 			{
