@@ -8,9 +8,29 @@ export const templateCustomer = {
 	phone_number: null,
 	Files: [null, null],
 };
-export const createCustomer = async (token, body) => {};
+export const createCustomer = async (token, body) => {
+	const response = await fetch("api/secured/customers", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: token,
+		},
+		body: JSON.stringify(body),
+	});
+	return response;
+};
 
-export const getOneCustomer = async (token, id) => {};
+export const getOneCustomer = async (token, id) => {
+	const url = `api/secured/customers/${id}`;
+	const response = await fetch(url, {
+		method: "GET",
+		headers: {
+			// "Content-Type": "application/json",
+			Authorization: token,
+		},
+	});
+	return response;
+};
 
 export const getAllCustomers = async (token, limit, page, lastName) => {
 	/*

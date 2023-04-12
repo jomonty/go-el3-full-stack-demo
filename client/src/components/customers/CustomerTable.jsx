@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 
-const CustomerTable = ({ customers }) => {
+const CustomerTable = ({ customers, handleEditCustomer }) => {
 	const TableHeader = () => {
 		return (
 			<thead>
@@ -10,6 +11,7 @@ const CustomerTable = ({ customers }) => {
 					<th>Last Name</th>
 					<th>Email</th>
 					<th>Phone #</th>
+					<th></th>
 				</tr>
 			</thead>
 		);
@@ -22,6 +24,9 @@ const CustomerTable = ({ customers }) => {
 				<td>{customer.last_name}</td>
 				<td>{customer.email}</td>
 				<td>{customer.phone_number}</td>
+				<td>
+					<Link to={`/customers/${customer.id}`}>Details</Link>
+				</td>
 			</tr>
 		);
 	});

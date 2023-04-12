@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import Customers from "./containers/Customers.jsx";
+import CustomerDetail from "./containers/CustomerDetail.jsx";
 import Users from "./containers/Users.jsx";
 import LogIn from "./containers/LogIn.jsx";
 import SignUp from "./containers/SignUp.jsx";
@@ -26,6 +27,10 @@ function App() {
 	return (
 		<Routes>
 			<Route path="/" element={<Customers handleLogOut={handleLogOut} />} />
+			<Route
+				path="/customers/:cust_id"
+				element={<CustomerDetail handleLogOut={handleLogOut} />}
+			/>
 			<Route path="/users" element={<Users handleLogOut={handleLogOut} />} />
 			<Route
 				path="/login"

@@ -21,6 +21,6 @@ const CustomerPagination = ({ searchParams, totalPages, setSearchParams }) => {
 			</Pagination.Item>
 		);
 	});
-	return <Pagination>{paginationItems}</Pagination>;
+	return <Pagination className="mb-0">{paginationItems}</Pagination>;
 };
 export default CustomerPagination;
