@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LoginWrapper from "../components/LoginWrapper.jsx";
-import SignupForm from "../components/SignupForm.jsx";
+import LoginWrapper from "../components/registration/LoginWrapper.jsx";
+import SignupForm from "../components/registration/SignupForm.jsx";
 
 const SignUp = ({ auth, setSignupSuccessful }) => {
 	const navigate = useNavigate();

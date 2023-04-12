@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LogInForm from "../components/LogInForm";
-import LoginWrapper from "../components/LoginWrapper";
+import LogInForm from "../components/registration/LogInForm";
+import LoginWrapper from "../components/registration/LoginWrapper";
 
 const LogIn = ({
 	auth,
