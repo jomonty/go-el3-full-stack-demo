@@ -1,22 +1,26 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LogInForm from "../components/registration/LogInForm";
-import LoginWrapper from "../components/registration/LoginWrapper";
+import LogInForm from "../components/registration/LogInForm.jsx";
+import LoginWrapper from "../components/registration/LoginWrapper.jsx";
+import { isAuthorized, logIn } from "../handlers/AuthHandler.jsx";
 
-const LogIn = ({
-	auth,
-	handleLogIn,
-	signupSuccessful,
-	setSignupSuccessful,
-}) => {
+const LogIn = ({ signupSuccessful, setSignupSuccessful }) => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (auth.isAuthenticated) {
+		if (isAuthorized()) {
 			navigate("/");
 		}
 	});
+
+	const handleLogIn = async (body) => {
+		const response = await logIn(body);
+		if (response.status === 200) {
+			navigate("/");
+		}
+		return response;
+	};
 
 	return (
 		<LoginWrapper>

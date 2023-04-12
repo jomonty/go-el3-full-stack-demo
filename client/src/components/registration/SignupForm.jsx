@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-import { register } from "../../handlers/AuthHandler";
-
-const SignupForm = ({ setSignupSuccessful }) => {
-	const navigate = useNavigate();
+const SignupForm = ({ handleRegistration }) => {
 	const emptyForm = {
 		email: "",
 		username: "",
@@ -23,12 +20,8 @@ const SignupForm = ({ setSignupSuccessful }) => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		console.log(form);
-		const response = await register(form);
-		if (response.status === 201) {
-			setSignupSuccessful(true);
-			navigate("/");
-		} else {
+		const response = await handleRegistration(form);
+		if (response.status !== 201) {
 			setAlertOpen(true);
 			setAlertValue(response.message);
 			const updatedForm = { ...form };
@@ -56,8 +49,6 @@ const SignupForm = ({ setSignupSuccessful }) => {
 			</div>
 		);
 	};
-
-	const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 	return (
 		<>

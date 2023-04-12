@@ -25,6 +25,7 @@ const CustomerTable = ({ customers }) => {
 			</tr>
 		);
 	});
+
 	return (
 		<Table striped bordered hover responsive="md">
 			<TableHeader />

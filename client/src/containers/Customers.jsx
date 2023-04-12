@@ -1,52 +1,65 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import DashboardWrapper from "../components/dashboard/DashboardWrapper";
+import { isAuthorized, getAuth } from "../handlers/AuthHandler.jsx";
+import DashboardWrapper from "../components/dashboard/DashboardWrapper.jsx";
 import CustomerTable from "../components/customers/CustomerTable.jsx";
+import CustomerPagination from "../components/customers/Pagination.jsx";
 import {
 	templateCustomer,
 	getAllCustomers,
 	getTotalCustomerCount,
 } from "../api/CustomerAPI";
 
-const Customers = ({ auth, checkAuthStatus, handleLogOut }) => {
+const Customers = ({ handleLogOut }) => {
+	const navigate = useNavigate();
 	const initialSearchParams = {
 		limit: 10,
 		page: 1,
 		lastName: "",
-		totalCount: 0,
 	};
-	const navigate = useNavigate();
 	const [customers, setCustomers] = useState([templateCustomer]);
 	const [searchParams, setSearchParams] = useState(initialSearchParams);
+	const [totalPages, setTotalPages] = useState(1);
 
 	useEffect(() => {
-		const updatedAuth = checkAuthStatus();
-		if (!updatedAuth.isAuthenticated) {
+		if (!isAuthorized()) {
 			navigate("/login");
-		} else {
-			fetchCustomerCount(updatedAuth.token).then(() => {
-				fetchCustomers(updatedAuth.token).then((res) => {
-					console.log(searchParams);
-					console.log(res);
-				});
-			});
 		}
 	}, []);
 
-	const fetchCustomerCount = async (token) => {
-		const response = await getTotalCustomerCount(token);
+	useEffect(() => {
+		if (!isAuthorized()) {
+			navigate("/login");
+		} else {
+			fetchCustomers(getAuth().token);
+		}
+	}, [searchParams]);
+
+	useEffect(() => {
+		if (!isAuthorized()) {
+			navigate("/login");
+		} else {
+			fetchTotalPages();
+		}
+	}, [customers]);
+
+	const fetchTotalPages = async () => {
+		const response = await getTotalCustomerCount(getAuth().token);
 		const data = await response.json();
 		if (response.status === 200) {
-			const updatedParams = { ...searchParams };
-			updatedParams.totalCount = data.customer_count;
-			setSearchParams(updatedParams);
+			if (data.customer_count && searchParams.limit) {
+				const pages = Math.ceil(data.customer_count / searchParams.limit);
+				setTotalPages(pages);
+			} else {
+				setTotalPages(1);
+			}
 		}
 	};
 
-	const fetchCustomers = async (token) => {
+	const fetchCustomers = async () => {
 		const response = await getAllCustomers(
-			token,
+			getAuth().token,
 			searchParams.limit,
 			searchParams.page,
 			searchParams.lastName
@@ -54,14 +67,20 @@ const Customers = ({ auth, checkAuthStatus, handleLogOut }) => {
 		const data = await response.json();
 		if (response.status === 200) {
 			setCustomers(data);
-			return data;
 		}
 	};
 	return (
-		<DashboardWrapper auth={auth} handleLogOut={handleLogOut}>
+		<DashboardWrapper auth={getAuth()} handleLogOut={handleLogOut}>
 			<h1>Customers</h1>
-			<div>
+			<div className="pt-5">
 				<CustomerTable customers={customers} />
+			</div>
+			<div className="d-flex justify-content-start">
+				<CustomerPagination
+					totalPages={totalPages}
+					searchParams={searchParams}
+					setSearchParams={setSearchParams}
+				/>
 			</div>
 		</DashboardWrapper>
 	);

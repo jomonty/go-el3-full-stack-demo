@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { isAuthorized, getAuth } from "../handlers/AuthHandler.jsx";
 import DashboardWrapper from "../components/dashboard/DashboardWrapper";
 import UserTable from "../components/users/UserTable.jsx";
 import { templateUser, getAllUsers } from "../api/UserAPI";
 
-const Users = ({ auth, checkAuthStatus, handleLogOut }) => {
+const Users = ({ handleLogOut }) => {
 	const navigate = useNavigate();
 	const [users, setUsers] = useState([templateUser, templateUser]);
 
 	useEffect(() => {
-		const updatedAuth = checkAuthStatus();
-		if (!updatedAuth.isAuthenticated) {
+		if (!isAuthorized) {
 			navigate("/login");
 		} else {
-			fetchUsers(updatedAuth.token);
+			fetchUsers(getAuth().token);
 		}
 	}, []);
 
@@ -27,7 +27,7 @@ const Users = ({ auth, checkAuthStatus, handleLogOut }) => {
 	};
 
 	return (
-		<DashboardWrapper auth={auth} handleLogOut={handleLogOut}>
+		<DashboardWrapper auth={getAuth()} handleLogOut={handleLogOut}>
 			<h1>Users</h1>
 			<div className="pt-5">
 				<UserTable users={users} />

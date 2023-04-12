@@ -15,7 +15,9 @@ const DashboardHeader = ({ auth, handleLogOut }) => {
 						<Nav.Link href="/users">Users</Nav.Link>
 					</Nav>
 					<div className="d-flex justify-content-between align-items-center">
-						<Navbar.Text className="pe-md-3">{auth.user.username}</Navbar.Text>
+						<Navbar.Text className="pe-md-3">
+							{auth.user ? auth.user.username : ""}
+						</Navbar.Text>
 						<Navbar.Text>
 							<Button variant="secondary" onClick={() => handleLogOut()}>
 								Log Out

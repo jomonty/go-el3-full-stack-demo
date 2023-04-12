@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
-	const navigate = useNavigate();
 	const emptyForm = {
 		email: "",
 		password: "",
@@ -20,12 +19,10 @@ const LogInForm = ({ handleLogIn, signupSuccessful, setSignupSuccessful }) => {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const res = await handleLogIn(form);
-		if (res.status === 200) {
-			navigate("/");
-		} else {
+		const response = await handleLogIn(form);
+		if (response.status !== 200) {
 			setAlertOpen(true);
-			setAlertValue(res.message);
+			setAlertValue(response.message);
 			const updatedForm = { ...form };
 			updatedForm.password = "";
 			setForm(updatedForm);

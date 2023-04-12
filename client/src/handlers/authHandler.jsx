@@ -36,6 +36,11 @@ export const logIn = async (body) => {
 	};
 };
 
+export const logOut = () => {
+	const auth = { ...initialAuth };
+	setLocalStorage(auth);
+};
+
 export const register = async (body) => {
 	const response = await registerUser(body);
 	const data = await response.json();
@@ -45,25 +50,52 @@ export const register = async (body) => {
 	};
 };
 
-export const validateAuth = () => {
-	const auth = { ...initialAuth };
+export const isAuthorized = () => {
 	if (!getLocalStorage("isAuthenticated")) {
 		localStorage.clear();
-		return auth;
+		return false;
 	} else {
 		const expiry = new Date(getLocalStorage("expiry"));
 		if (expiry < Date.now()) {
 			localStorage.clear();
-			return auth;
+			return false;
 		}
+	}
+	return true;
+};
+
+export const getAuth = () => {
+	const auth = { ...initialAuth };
+	if (!isAuthorized) {
+		return auth;
+	} else {
 		auth.isAuthenticated = getLocalStorage("isAuthenticated");
 		auth.user = getLocalStorage("user");
 		auth.token = getLocalStorage("token");
 		auth.expiry = new Date(getLocalStorage("expiry"));
-
 		return auth;
 	}
 };
+
+// export const validateAuth = () => {
+// 	const auth = { ...initialAuth };
+// 	if (!getLocalStorage("isAuthenticated")) {
+// 		localStorage.clear();
+// 		return auth;
+// 	} else {
+// 		const expiry = new Date(getLocalStorage("expiry"));
+// 		if (expiry < Date.now()) {
+// 			localStorage.clear();
+// 			return auth;
+// 		}
+// 		auth.isAuthenticated = getLocalStorage("isAuthenticated");
+// 		auth.user = getLocalStorage("user");
+// 		auth.token = getLocalStorage("token");
+// 		auth.expiry = new Date(getLocalStorage("expiry"));
+
+// 		return auth;
+// 	}
+// };
 
 const setLocalStorage = (auth) => {
 	localStorage.setItem("isAuthenticated", JSON.stringify(auth.isAuthenticated));
