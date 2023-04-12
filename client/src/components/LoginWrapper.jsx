@@ -2,7 +2,7 @@ const LoginWrapper = ({ children }) => {
 	return (
 		<div className="container-fluid">
 			<div className="row vh-100">
-				<div className="col-md vh-50 md-vh-100">
+				<div className="col-lg vh-50 md-vh-100">
 					<div className=" d-flex flex-column justify-content-center align-content-center align-items-center h-100">
 						<div>
 							<img src="e3-logo.png" />
@@ -13,7 +13,7 @@ const LoginWrapper = ({ children }) => {
 						</div>
 					</div>
 				</div>
-				<div className="col-md bg-light vh-50 md-vh-100 d-none d-md-block"></div>
+				<div className="col-lg bg-light vh-50 lg-vh-100 d-none d-lg-block"></div>
 			</div>
 		</div>
 	);

@@ -1,23 +1,24 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
-import Dashboard from "./containers/Dashboard.jsx";
+import Customers from "./containers/Customers.jsx";
+import Users from "./containers/Users.jsx";
 import LogIn from "./containers/LogIn.jsx";
 import SignUp from "./containers/SignUp.jsx";
+import { initialAuth, logIn, validateAuth } from "./handlers/AuthHandler.jsx";
 import "./App.css";
-import {
-	initialAuth,
-	logIn,
-	checkLocalStorage,
-} from "./handlers/AuthHandler.jsx";
 
 function App() {
+	const navigate = useNavigate();
 	const [auth, setAuth] = useState({ ...initialAuth });
 	const [signupSuccessful, setSignupSuccessful] = useState(false);
 
 	useEffect(() => {
-		const updatedAuth = checkLocalStorage();
-		setAuth(updatedAuth);
+		const validatedAuth = validateAuth();
+		if (!validatedAuth.isAuthenticated) {
+			navigate("/login");
+		}
+		setAuth(validatedAuth);
 	}, []);
 
 	const handleLogIn = async (body) => {
@@ -31,34 +32,55 @@ function App() {
 	const handleLogOut = () => {
 		localStorage.clear();
 		setAuth({ ...initialAuth });
+		navigate("/login");
+	};
+
+	const checkAuthStatus = () => {
+		const updatedAuth = validateAuth();
+		setAuth(updatedAuth);
+		return updatedAuth;
 	};
 
 	return (
-		<Router>
-			<Routes>
-				<Route
-					path="/"
-					element={<Dashboard auth={auth} handleLogOut={handleLogOut} />}
-				/>
-				<Route
-					path="/login"
-					element={
-						<LogIn
-							auth={auth}
-							handleLogIn={handleLogIn}
-							signupSuccessful={signupSuccessful}
-							setSignupSuccessful={setSignupSuccessful}
-						/>
-					}
-				/>
-				<Route
-					path="/signup"
-					element={
-						<SignUp auth={auth} setSignupSuccessful={setSignupSuccessful} />
-					}
-				/>
-			</Routes>
-		</Router>
+		<Routes>
+			<Route
+				path="/"
+				element={
+					<Customers
+						auth={auth}
+						checkAuthStatus={checkAuthStatus}
+						handleLogOut={handleLogOut}
+					/>
+				}
+			/>
+			<Route
+				path="/users"
+				element={
+					<Users
+						auth={auth}
+						checkAuthStatus={checkAuthStatus}
+						handleLogOut={handleLogOut}
+					/>
+				}
+			/>
+			<Route
+				path="/login"
+				element={
+					<LogIn
+						auth={auth}
+						handleLogIn={handleLogIn}
+						signupSuccessful={signupSuccessful}
+						setSignupSuccessful={setSignupSuccessful}
+					/>
+				}
+			/>
+			<Route
+				path="/signup"
+				element={
+					<SignUp auth={auth} setSignupSuccessful={setSignupSuccessful} />
+				}
+			/>
+		</Routes>
 	);
 }
 

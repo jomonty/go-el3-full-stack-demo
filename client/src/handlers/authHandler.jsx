@@ -45,7 +45,7 @@ export const register = async (body) => {
 	};
 };
 
-export const checkLocalStorage = () => {
+export const validateAuth = () => {
 	const auth = { ...initialAuth };
 	if (!getLocalStorage("isAuthenticated")) {
 		localStorage.clear();
