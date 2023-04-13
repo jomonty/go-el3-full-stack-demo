@@ -11,6 +11,7 @@ const CustomerTable = ({ customers, handleEditCustomer }) => {
 					<th>Last Name</th>
 					<th>Email</th>
 					<th>Phone #</th>
+					<th>No. Files</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -24,6 +25,7 @@ const CustomerTable = ({ customers, handleEditCustomer }) => {
 				<td>{customer.last_name}</td>
 				<td>{customer.email}</td>
 				<td>{customer.phone_number}</td>
+				<td>{customer.Files.length}</td>
 				<td>
 					<Link to={`/customers/${customer.id}`}>Details</Link>
 				</td>
@@ -32,7 +34,7 @@ const CustomerTable = ({ customers, handleEditCustomer }) => {
 	});
 
 	return (
-		<Table striped bordered hover responsive="md">
+		<Table striped bordered hover responsive>
 			<TableHeader />
 			<tbody>{tableRows}</tbody>
 		</Table>

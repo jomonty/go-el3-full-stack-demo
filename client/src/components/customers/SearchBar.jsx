@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
+import Stack from "react-bootstrap/Stack";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
@@ -23,19 +24,17 @@ const SearchBar = ({ searchParams, setSearchParams }) => {
 
 	return (
 		<Form onSubmit={handleFormSubmit}>
-			<InputGroup>
-				<FloatingLabel controlId="searchInput" label="Search by last name">
-					<Form.Control
-						type="text"
-						value={searchText}
-						placeholder="some text"
-						onChange={handleFormChange}
-					/>
-				</FloatingLabel>
+			<Stack direction="horizontal" gap={3}>
+				<Form.Control
+					type="text"
+					value={searchText}
+					placeholder="Search by last name"
+					onChange={handleFormChange}
+				/>
 				<Button variant="secondary" type="submit">
 					Search
 				</Button>
-			</InputGroup>
+			</Stack>
 		</Form>
 	);
 };
