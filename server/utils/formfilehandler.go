@@ -46,6 +46,6 @@ func MultiPartFormGetFile(form *multipart.Form) *multipart.FileHeader {
 
 func MultiPartFormFileSaveLocation(custID int) string {
 	ts := time.Now().UTC().Format(time.RFC3339)
-	fileSaveLocation := fmt.Sprintf("uploaded_docs/%d_%s", custID, ts)
+	fileSaveLocation := fmt.Sprintf("uploaded_docs/%d_%s.pdf", custID, ts)
 	return strings.Replace(fileSaveLocation, ":", "", -1)
 }
