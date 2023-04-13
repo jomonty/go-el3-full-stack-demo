@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Button from "react-bootstrap/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
 import { isAuthorized, getAuth } from "../handlers/AuthHandler.jsx";
 import DashboardWrapper from "../components/dashboard/DashboardWrapper";
 import SingleCustomerDetail from "../components/customer_single/SingleCustomerDetail.jsx";
@@ -49,17 +45,11 @@ const CustomerDetail = ({ handleLogOut }) => {
 	return (
 		<DashboardWrapper auth={getAuth()} handleLogOut={handleLogOut}>
 			<SingleCustomerDetail customer={customer} />
-			<Row xs={1} md={2}>
-				<Col className="d-flex justify-content-evenly p-3">
-					<SingleCustomerEditModal
-						customer={customer}
-						fetchCustomer={fetchCustomer}
-					/>
-					<Button variant="danger" className="flex-fill" onClick={handleDelete}>
-						Delete
-					</Button>
-				</Col>
-			</Row>
+			<SingleCustomerEditModal
+				customer={customer}
+				fetchCustomer={fetchCustomer}
+				handleDelete={handleDelete}
+			/>
 			<SingleCustomerFiles
 				customer={customer}
 				setCustomer={setCustomer}

@@ -3,6 +3,7 @@ import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Alert from "react-bootstrap/Alert";
 
 import { getAuth } from "../../handlers/AuthHandler.jsx";
 import { addFile } from "../../api/FileAPI.jsx";
@@ -49,35 +50,32 @@ const AddFileModal = ({ customer, fetchCustomer }) => {
 		}
 	};
 
-	const SuccessAlert = ({ message }) => {
+	const SuccessAlert = () => {
 		return (
-			<div className="d-flex justify-content-between alert alert-success fade show mt-3">
-				<div>
-					<strong>File uploaded successfullly.</strong>
-				</div>
-				<button
-					type="button"
-					className="btn-close"
-					onClick={() => setAlertSuccessOpen(false)}
-				/>
-			</div>
+			<Alert
+				variant="success"
+				className="mt-3"
+				dismissible
+				onClose={() => {
+					setAlertSuccessOpen(false);
+				}}
+			>
+				File uploaded successfully
+			</Alert>
 		);
 	};
 
 	const WarningAlert = ({ message }) => {
-		return (
-			<div className="d-flex justify-content-between alert alert-warning fade show mt-3">
-				<div>
-					<strong>Error: </strong>
-					{message}
-				</div>
-				<button
-					type="button"
-					className="btn-close"
-					onClick={() => setAlertSuccessOpen(false)}
-				/>
-			</div>
-		);
+		<Alert
+			variant="warning"
+			className="mt-3"
+			dismissible
+			onClose={() => {
+				setAlertWarningOpen(false);
+			}}
+		>
+			{message}
+		</Alert>;
 	};
 	return (
 		<>
@@ -85,7 +83,7 @@ const AddFileModal = ({ customer, fetchCustomer }) => {
 				Add File
 			</Button>
 			{alertSuccessOpen ? <SuccessAlert /> : ""}
-			{alertWarningOpen ? <WarningAlert message={alertWarningValue} /> : ""}
+			{alertWarningOpen ? <WarningAlert>{alertWarningValue}</WarningAlert> : ""}
 			<Modal
 				show={show}
 				onHide={handleClose}

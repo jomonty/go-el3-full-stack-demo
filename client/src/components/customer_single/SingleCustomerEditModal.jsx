@@ -5,11 +5,14 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Alert from "react-bootstrap/Alert";
 
-import { templateCustomer, updateOneCustomer } from "../../api/CustomerAPI.jsx";
+import { updateOneCustomer } from "../../api/CustomerAPI.jsx";
 import { getAuth } from "../../handlers/AuthHandler.jsx";
 
-const SingleCustomerEditModal = ({ customer, fetchCustomer }) => {
+import ConfirmDelete from "../common/ConfirmDelete.jsx";
+
+const SingleCustomerEditModal = ({ customer, fetchCustomer, handleDelete }) => {
 	const templateForm = {
 		id: "",
 		created_at: "",
@@ -21,6 +24,7 @@ const SingleCustomerEditModal = ({ customer, fetchCustomer }) => {
 	};
 	const [show, setShow] = useState(false);
 	const [form, setForm] = useState({ ...templateForm });
+	const [successAlertOpen, setSuccessAlertOpen] = useState(false);
 	const [alertOpen, setAlertOpen] = useState(false);
 	const [alertValue, setAlertValue] = useState("");
 
@@ -31,15 +35,18 @@ const SingleCustomerEditModal = ({ customer, fetchCustomer }) => {
 	};
 
 	const handleShow = () => {
-		const updatedForm = { ...form };
-		updatedForm.id = customer.id;
-		updatedForm.created_at = customer.created_at;
-		updatedForm.first_name = customer.first_name;
-		updatedForm.last_name = customer.last_name;
-		updatedForm.date_of_birth = strToISODate(customer.date_of_birth);
-		updatedForm.email = customer.email;
-		updatedForm.phone_number = customer.phone_number;
+		const updatedForm = {
+			id: customer.id,
+			created_at: customer.created_at,
+			first_name: customer.first_name,
+			last_name: customer.last_name,
+			date_of_birth: strToISODate(customer.date_of_birth),
+			email: customer.email,
+			phone_number: customer.phone_number,
+		};
 		setForm(updatedForm);
+		setAlertOpen(false);
+		setSuccessAlertOpen(false);
 		setShow(true);
 	};
 
@@ -52,13 +59,11 @@ const SingleCustomerEditModal = ({ customer, fetchCustomer }) => {
 
 	const handleFormSubmit = async (event) => {
 		event.preventDefault();
-		console.log(customer.created_at);
-		console.log(form.created_at);
-		console.log(form);
 		const response = await updateOneCustomer(getAuth().token, form);
 		if (response.status === 200) {
 			handleClose();
 			fetchCustomer();
+			setSuccessAlertOpen(true);
 		} else {
 			const data = await response.json();
 			setAlertOpen(true);
@@ -69,21 +74,6 @@ const SingleCustomerEditModal = ({ customer, fetchCustomer }) => {
 	const handleAlertClose = () => {
 		setAlertOpen(false);
 		setAlertValue("");
-	};
-
-	const WarningAlert = ({ message }) => {
-		return (
-			<div className="d-flex justify-content-between alert alert-warning fade show">
-				<div>
-					<strong>{message}</strong>
-				</div>
-				<button
-					type="button"
-					className="btn-close"
-					onClick={handleAlertClose}
-				></button>
-			</div>
-		);
 	};
 
 	const strToISODate = (strDate) => {
@@ -101,9 +91,29 @@ const SingleCustomerEditModal = ({ customer, fetchCustomer }) => {
 
 	return (
 		<>
-			<Button variant="warning" className="flex-fill" onClick={handleShow}>
-				Edit
-			</Button>
+			<Row xs={1} md={2}>
+				<Col className="pt-3">
+					{successAlertOpen ? (
+						<Alert
+							variant="success"
+							onClose={() => setSuccessAlertOpen(false)}
+							dismissible
+						>
+							Updated Successfully
+						</Alert>
+					) : (
+						""
+					)}
+				</Col>
+			</Row>
+			<Row xs={1} md={2} gap={2}>
+				<Col className="d-flex justify-content-evenly ">
+					<Button variant="warning" className="flex-fill" onClick={handleShow}>
+						Edit
+					</Button>
+					<ConfirmDelete handleDelete={handleDelete} />
+				</Col>
+			</Row>
 			<Modal
 				show={show}
 				onHide={handleClose}
@@ -191,7 +201,9 @@ const SingleCustomerEditModal = ({ customer, fetchCustomer }) => {
 								/>
 							</Col>
 						</Row>
-						<Row>{alertOpen ? <WarningAlert message={alertValue} /> : ""}</Row>
+						<Row>
+							{alertOpen ? <Alert variant={warning}>{alertValue}</Alert> : ""}
+						</Row>
 					</Modal.Body>
 					<Modal.Footer>
 						<Button variant="secondary" onClick={handleClose}>

@@ -41,10 +41,6 @@ export const getOneCustomer = async (token, id) => {
 };
 
 export const getAllCustomers = async (token, limit, page, lastName) => {
-	/*
-/api/secured/customers takes a GET request with no body
-optional query params of limit, page, last_name
-*/
 	const url = `/api/secured/customers?limit=${limit}&page=${page}&last_name=${lastName}`;
 	const response = await fetch(url, {
 		method: "GET",

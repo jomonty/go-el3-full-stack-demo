@@ -1,8 +1,12 @@
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 import { getAuth } from "../../handlers/AuthHandler.jsx";
 import { getOneFile, deleteFile } from "../../api/FileAPI.jsx";
+
+import ConfirmDelete from "../common/ConfirmDelete.jsx";
 import AddFileModal from "./AddFileModal.jsx";
 
 const SingleCustomerFiles = ({ customer, setCustomer, fetchCustomer }) => {
@@ -56,13 +60,24 @@ const SingleCustomerFiles = ({ customer, setCustomer, fetchCustomer }) => {
 				<td>{handleDate(file.created_at)}</td>
 				<td>{file.file_name}</td>
 				<td className="d-flex justify-content-evenly">
-					<Button variant="secondary" onClick={() => fetchFile(file)}>
-						Open
-					</Button>
-					<Button variant="warning">Edit</Button>
-					<Button variant="danger" onClick={() => handleDelete(file.id)}>
-						Delete
-					</Button>
+					<Row>
+						<Col>
+							<Button
+								variant="secondary"
+								classname="flex-fill"
+								onClick={() => fetchFile(file)}
+							>
+								Open
+							</Button>
+						</Col>
+						<Col>
+							<ConfirmDelete
+								handleDelete={() => {
+									handleDelete(file.id);
+								}}
+							/>
+						</Col>
+					</Row>
 				</td>
 			</tr>
 		);
