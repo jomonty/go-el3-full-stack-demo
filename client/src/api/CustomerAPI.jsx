@@ -56,7 +56,18 @@ optional query params of limit, page, last_name
 	return response;
 };
 
-export const updateOneCustomer = async (token, body, id) => {};
+export const updateOneCustomer = async (token, body) => {
+	const url = `/api/secured/customers/${body.id}`;
+	const response = await fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: token,
+		},
+		body: JSON.stringify(body),
+	});
+	return response;
+};
 
 export const deleteOneCustomer = async (token, id) => {
 	const url = `/api/secured/customers/${id}`;

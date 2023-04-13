@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 import { getAuth } from "../../handlers/AuthHandler.jsx";
-import { addFile } from "../../api/FileAPI";
+import { addFile } from "../../api/FileAPI.jsx";
 
 const AddFileModal = ({ customer, fetchCustomer }) => {
 	const [show, setShow] = useState(false);

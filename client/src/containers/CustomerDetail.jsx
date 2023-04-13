@@ -7,8 +7,9 @@ import Col from "react-bootstrap/Col";
 
 import { isAuthorized, getAuth } from "../handlers/AuthHandler.jsx";
 import DashboardWrapper from "../components/dashboard/DashboardWrapper";
-import SingleCustomerDetail from "../components/customer_details/SingleCustomerDetail.jsx";
-import SingleCustomerFiles from "../components/customer_details/SingleCustomerFiles.jsx";
+import SingleCustomerDetail from "../components/customer_single/SingleCustomerDetail.jsx";
+import SingleCustomerFiles from "../components/customer_single/SingleCustomerFiles.jsx";
+import SingleCustomerEditModal from "../components/customer_single/SingleCustomerEditModal.jsx";
 
 import {
 	templateCustomer,
@@ -50,9 +51,10 @@ const CustomerDetail = ({ handleLogOut }) => {
 			<SingleCustomerDetail customer={customer} />
 			<Row xs={1} md={2}>
 				<Col className="d-flex justify-content-evenly p-3">
-					<Button variant="warning" className="flex-fill">
-						Edit
-					</Button>
+					<SingleCustomerEditModal
+						customer={customer}
+						fetchCustomer={fetchCustomer}
+					/>
 					<Button variant="danger" className="flex-fill" onClick={handleDelete}>
 						Delete
 					</Button>
