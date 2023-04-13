@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { isAuthorized, getAuth } from "../handlers/AuthHandler.jsx";
-import DashboardWrapper from "../components/dashboard/DashboardWrapper";
-import SingleCustomerDetail from "../components/customer_single/SingleCustomerDetail.jsx";
-import SingleCustomerFiles from "../components/customer_single/SingleCustomerFiles.jsx";
-import SingleCustomerEditModal from "../components/customer_single/SingleCustomerEditModal.jsx";
-
 import {
 	templateCustomer,
 	getOneCustomer,
 	deleteOneCustomer,
 } from "../api/CustomerAPI.jsx";
+
+import DashboardWrapper from "../components/dashboard/DashboardWrapper";
+import SingleCustomerDetail from "../components/customer_single/SingleCustomerDetail.jsx";
+import SingleCustomerFiles from "../components/customer_single/SingleCustomerFiles.jsx";
+import SingleCustomerEditModal from "../components/customer_single/SingleCustomerEditModal.jsx";
 
 const CustomerDetail = ({ handleLogOut }) => {
 	const navigate = useNavigate();

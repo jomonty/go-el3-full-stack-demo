@@ -6,16 +6,17 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 
 import { isAuthorized, getAuth } from "../handlers/AuthHandler.jsx";
-import DashboardWrapper from "../components/dashboard/DashboardWrapper.jsx";
-import CustomerTable from "../components/customers/CustomerTable.jsx";
-import CustomerPagination from "../components/customers/Pagination.jsx";
-import SearchBar from "../components/customers/SearchBar.jsx";
-import NewCustomer from "../components/customers/NewCustomer.jsx";
 import {
 	templateCustomer,
 	getAllCustomers,
 	getTotalCustomerCount,
 } from "../api/CustomerAPI";
+
+import DashboardWrapper from "../components/dashboard/DashboardWrapper.jsx";
+import CustomerTable from "../components/customers/CustomerTable.jsx";
+import CustomerPagination from "../components/customers/Pagination.jsx";
+import SearchBar from "../components/customers/SearchBar.jsx";
+import NewCustomer from "../components/customers/NewCustomer.jsx";
 
 const Customers = ({ handleLogOut }) => {
 	const navigate = useNavigate();

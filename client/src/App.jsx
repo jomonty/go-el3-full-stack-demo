@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
+import { isAuthorized, logOut } from "./handlers/AuthHandler.jsx";
+
 import Customers from "./containers/Customers.jsx";
 import CustomerDetail from "./containers/CustomerDetail.jsx";
 import Users from "./containers/Users.jsx";
 import LogIn from "./containers/LogIn.jsx";
 import SignUp from "./containers/SignUp.jsx";
-import { isAuthorized, logOut } from "./handlers/AuthHandler.jsx";
+
 import "./App.css";
 
 function App() {

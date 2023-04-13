@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { isAuthorized, register } from "../handlers/AuthHandler.jsx";
+
 import LoginWrapper from "../components/registration/LoginWrapper.jsx";
 import SignupForm from "../components/registration/SignupForm.jsx";
-import { isAuthorized, register } from "../handlers/AuthHandler.jsx";
 
 const SignUp = ({ setSignupSuccessful }) => {
 	const navigate = useNavigate();

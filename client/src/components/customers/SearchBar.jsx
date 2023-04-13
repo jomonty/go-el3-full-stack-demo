@@ -1,9 +1,7 @@
 import { useState } from "react";
 
-import FloatingLabel from "react-bootstrap/FloatingLabel";
 import Form from "react-bootstrap/Form";
 import Stack from "react-bootstrap/Stack";
-import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 
 const SearchBar = ({ searchParams, setSearchParams }) => {

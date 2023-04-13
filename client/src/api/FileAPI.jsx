@@ -24,8 +24,6 @@ export const addFile = async (token, customer_id, file) => {
 	return response;
 };
 
-// export const updateFile = async (token, body) => {};
-
 export const deleteFile = async (token, id) => {
 	const url = `/api/secured/files/${id}`;
 	const response = await fetch(url, {

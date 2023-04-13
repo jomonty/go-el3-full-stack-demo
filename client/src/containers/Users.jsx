@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { isAuthorized, getAuth } from "../handlers/AuthHandler.jsx";
+import { templateUser, getAllUsers } from "../api/UserAPI";
+
 import DashboardWrapper from "../components/dashboard/DashboardWrapper";
 import UserTable from "../components/users/UserTable.jsx";
-import { templateUser, getAllUsers } from "../api/UserAPI";
 
 const Users = ({ handleLogOut }) => {
 	const navigate = useNavigate();

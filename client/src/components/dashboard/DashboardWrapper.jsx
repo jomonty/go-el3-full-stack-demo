@@ -1,6 +1,6 @@
-import DashboardHeader from "./DashboardHeader.jsx";
-
 import Container from "react-bootstrap/Container";
+
+import DashboardHeader from "./DashboardHeader.jsx";
 
 const DashboardWrapper = ({ auth, handleLogOut, children }) => {
 	return (
