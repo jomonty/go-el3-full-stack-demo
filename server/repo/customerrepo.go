@@ -58,10 +58,24 @@ func UpdateOneCustomer(customerID int, updatedCustomer models.Customer) (models.
 }
 
 func DeleteOneCustomer(customerID int) error {
+	// Fetch Customer to facilitate file deletion
 	var customer models.Customer
-	if err := database.DB.Model(&models.Customer{}).Where("id = ?", customerID).Delete(&customer).Error; err != nil {
+	if err := database.DB.Model(&models.Customer{}).Preload("Files").First(&customer, customerID).Error; err != nil {
 		return err
 	}
+	// Loop over and delete related files
+	for _, element := range customer.Files {
+		if err := DeleteOneFile(int(element.ID)); err != nil {
+			return err
+		}
+	}
+	// Remove customer from database
+	if err := database.DB.Delete(&models.Customer{}, customerID).Error; err != nil {
+		return err
+	}
+	// if err := database.DB.Model(&models.Customer{}).Where("id = ?", customerID).Delete(&customer).Error; err != nil {
+	// 	return err
+	// }
 	return nil
 }
 

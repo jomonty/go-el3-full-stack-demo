@@ -3,6 +3,7 @@ package repo
 import (
 	"jomonty/go-el3-full-stack-demo-server/database"
 	"jomonty/go-el3-full-stack-demo-server/models"
+	"os"
 )
 
 func CreateFile(file *models.File) error {
@@ -34,8 +35,17 @@ func UpdateOneFile(fileID int, updatedFile models.File) (models.File, error) {
 }
 
 func DeleteOneFile(fileID int) error {
+	// Fetch file to enable deletion
 	var file models.File
-	if err := database.DB.Model(&models.File{}).Where("id = ?", fileID).Delete(&file).Error; err != nil {
+	if err := database.DB.Model(&models.File{}).First(&file, fileID).Error; err != nil {
+		return err
+	}
+	// Delete saved file, abort on error
+	if err := os.Remove(file.FileLocation); err != nil {
+		return err
+	}
+	// Remove file from database
+	if err := database.DB.Delete(&models.File{}, fileID).Error; err != nil {
 		return err
 	}
 	return nil
