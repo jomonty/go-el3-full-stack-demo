@@ -12,7 +12,7 @@ import { getAuth } from "../../handlers/AuthHandler.jsx";
 
 import ConfirmDelete from "../common/ConfirmDelete.jsx";
 
-const SingleCustomerEditModal = ({ customer, fetchCustomer, handleDelete }) => {
+const EditModal = ({ customer, fetchCustomer, handleDelete }) => {
 	const templateForm = {
 		id: "",
 		created_at: "",
@@ -219,4 +219,4 @@ const SingleCustomerEditModal = ({ customer, fetchCustomer, handleDelete }) => {
 	);
 };
 
-export default SingleCustomerEditModal;
+export default EditModal;

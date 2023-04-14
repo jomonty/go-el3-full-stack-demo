@@ -2,7 +2,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-const SingleCustomerDetail = ({ customer }) => {
+const CustomerInfo = ({ customer }) => {
 	const StyledRow = ({ children }) => {
 		return (
 			<Row xs={2} md={4}>
@@ -70,4 +70,4 @@ const SingleCustomerDetail = ({ customer }) => {
 		</Container>
 	);
 };
-export default SingleCustomerDetail;
+export default CustomerInfo;

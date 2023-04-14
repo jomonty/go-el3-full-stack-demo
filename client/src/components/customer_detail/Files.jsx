@@ -8,8 +8,9 @@ import { getOneFile, deleteFile } from "../../api/FileAPI.jsx";
 
 import ConfirmDelete from "../common/ConfirmDelete.jsx";
 import AddFileModal from "./AddFileModal.jsx";
+import ViewFileModal from "./ViewFileModal.jsx";
 
-const SingleCustomerFiles = ({ customer, setCustomer, fetchCustomer }) => {
+const Files = ({ customer, setCustomer, fetchCustomer }) => {
 	const fetchFile = async (file) => {
 		const response = await getOneFile(getAuth().token, file.file_location);
 		if (response.status === 200) {
@@ -64,11 +65,14 @@ const SingleCustomerFiles = ({ customer, setCustomer, fetchCustomer }) => {
 						<Col>
 							<Button
 								variant="secondary"
-								classname="flex-fill"
+								className="flex-fill"
 								onClick={() => fetchFile(file)}
 							>
-								Open
+								Download
 							</Button>
+						</Col>
+						<Col>
+							<ViewFileModal file={file} />
 						</Col>
 						<Col>
 							<ConfirmDelete
@@ -93,4 +97,4 @@ const SingleCustomerFiles = ({ customer, setCustomer, fetchCustomer }) => {
 		</>
 	);
 };
-export default SingleCustomerFiles;
+export default Files;

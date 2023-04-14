@@ -9,9 +9,9 @@ import {
 } from "../api/CustomerAPI.jsx";
 
 import DashboardWrapper from "../components/dashboard/DashboardWrapper";
-import SingleCustomerDetail from "../components/customer_single/SingleCustomerDetail.jsx";
-import SingleCustomerFiles from "../components/customer_single/SingleCustomerFiles.jsx";
-import SingleCustomerEditModal from "../components/customer_single/SingleCustomerEditModal.jsx";
+import CustomerInfo from "../components/customer_detail/CustomerInfo.jsx";
+import Files from "../components/customer_detail/Files.jsx";
+import EditModal from "../components/customer_detail/EditModal.jsx";
 
 const CustomerDetail = ({ handleLogOut }) => {
 	const navigate = useNavigate();
@@ -44,13 +44,13 @@ const CustomerDetail = ({ handleLogOut }) => {
 
 	return (
 		<DashboardWrapper auth={getAuth()} handleLogOut={handleLogOut}>
-			<SingleCustomerDetail customer={customer} />
-			<SingleCustomerEditModal
+			<CustomerInfo customer={customer} />
+			<EditModal
 				customer={customer}
 				fetchCustomer={fetchCustomer}
 				handleDelete={handleDelete}
 			/>
-			<SingleCustomerFiles
+			<Files
 				customer={customer}
 				setCustomer={setCustomer}
 				fetchCustomer={fetchCustomer}
