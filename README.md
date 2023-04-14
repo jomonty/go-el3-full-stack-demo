@@ -35,8 +35,8 @@ On the front end, I've been trying to get exposure to as many CSS frameworks as 
     * vite
 <br>
 <br>
-<!-- Getting Started -->
-## Getting Started
+
+## Getting started
 ### Prerequisites
 * Go, MySQL, NodeJS installed
 #### Server
