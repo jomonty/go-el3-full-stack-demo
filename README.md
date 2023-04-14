@@ -3,10 +3,24 @@
 
 <!-- About -->
 A full stack lightweight CRM, with JWT based authentication, full CRUD functionality with MySQL for persistence, file upload and download capability and styled using Bootstrap5.
-
+<br>
+<br>
 <!-- Goals -->
 ## Goals
+Facilitate learning Go and Bootstrap5 by developing a CRUD app for a basic CRM system. 
 
+The server should have persistence via an ORM, JWT-based authentication, file upload and association to customer entity with retrieval, with stretch goals of implementation of paginatation and search functionality.
+
+The client should have authentication handling, a simple UI that makes use of functionality offered by the server, and it should make use of many standard Bootstrap components such as Modals, Alerts, Tables etc.
+<br>
+<br>
+<!-- Outcomes -->
+## Outcomes
+I really enjoyed making this. I was looking for a way to push myself beyond what I've achived in past work and I was curious about Go, so I was super excited to get started. 
+
+On the front end, I've been trying to get exposure to as many CSS frameworks as possible so it was great to get a chance to use Bootstrap. Honestly, I found it a little fiddly to begin with, having just spent some time using TailwindCSS, but I quickly found that once I got familiar with the components it is really quick to get things running with.
+<br>
+<br>
 <!-- Built With -->
 ## Built with
 * Go
@@ -17,6 +31,8 @@ A full stack lightweight CRM, with JWT based authentication, full CRUD functiona
     * react-router-dom
     * react-bootstrap
     * vite
+<br>
+<br>
 <!-- Getting Started -->
 ## Getting Started
 ### Prerequisites
