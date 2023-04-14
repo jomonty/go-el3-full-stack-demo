@@ -18,6 +18,8 @@ The client should have authentication handling, a simple UI that makes use of fu
 ## Outcomes
 I really enjoyed making this. I was looking for a way to push myself beyond what I've achived in past work and I was curious about Go, so I was super excited to get started. 
 
+Not having used Go before, I started off with tutorials covering each of the main features I wanted the app to have (RESTful API, ORM, authentication etc), and built mini-projects for each one before planning out (I used Postman to plan and document the API routes - https://www.postman.com/jomonty/workspace/go-el3-full-stack-demo) and building out the functionality, consolidating and continuing to learn as I went. 
+
 On the front end, I've been trying to get exposure to as many CSS frameworks as possible so it was great to get a chance to use Bootstrap. Honestly, I found it a little fiddly to begin with, having just spent some time using TailwindCSS, but I quickly found that once I got familiar with the components it is really quick to get things running with.
 <br>
 <br>
