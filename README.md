@@ -53,7 +53,7 @@ On the front end, I've been trying to get exposure to as many CSS frameworks as 
 #### Client
 I used pnpm for package management, but npm commands will work fine for the below.
 
-* Navigate to the client directory in a terminal window and run
+* Clone the repo and navigate to the client directory in a terminal window and run
     ```sh
     pnpm install
     ```
